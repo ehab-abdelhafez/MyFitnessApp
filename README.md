@@ -8,7 +8,7 @@ It's a **Progressive Web App (PWA)**: it installs straight onto your Samsung Fol
 
 ## ✨ What's inside
 
-- **Today** — the right session for each weekday (your Mon–Sun split), a warm-up, the full workout, and the daily posture anchors.
+- **Today** — the right session for each weekday (your Mon–Sun split), a warm-up, the full workout, and the daily posture anchors. A **date picker** (◀ ▶ or tap the date) lets you log or edit any past day you missed.
 - **Workout tracking** — log sets / reps / weight per exercise; everything is saved automatically.
 - **Exercise demos** — tap **▶** on any movement for an in-app YouTube demo + form cues. Photos are illustrative emoji glyphs; every video link also opens in YouTube as a fallback.
 - **Nutrition** — protein logging against your 150–170 g target with quick-add presets, plus the plate method and sample day for reference.
