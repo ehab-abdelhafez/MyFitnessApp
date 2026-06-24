@@ -217,6 +217,15 @@ svg.chart { width: 100%; height: auto; display: block; }
 .install-banner { background: linear-gradient(160deg, var(--brand), var(--brand-2)); border: none; color: #fff; }
 .install-banner h2 { color: #fff; }
 
+/* date navigation bar */
+.datebar { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--line);
+  border-radius: 14px; padding: 8px 10px; margin-bottom: 14px; }
+.datebar .datepick { flex: 1; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+.datebar .datepick > span { font-weight: 700; font-size: 14px; }
+.datebar .datepick input[type="date"] { background: transparent; border: none; color: var(--muted);
+  font-size: 12px; text-align: center; padding: 2px; width: 100%; }
+.datebar .icon-btn { width: 36px; height: 36px; }
+
 /* section title */
 .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 1.4px; color: var(--muted); margin: 18px 4px 8px; }
 

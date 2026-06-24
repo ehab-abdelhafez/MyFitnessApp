@@ -13,6 +13,38 @@ const fmtDate = (k) => new Date(k + "T00:00:00").toLocaleDateString(undefined, {
 
 let deferredInstall = null;
 let swReg = null;
+let viewDate = Store.todayKey(); // the day being viewed/logged (defaults to today)
+
+function dateBar() {
+  const today = Store.todayKey();
+  const isToday = viewDate === today;
+  return `<div class="datebar">
+    <button class="icon-btn" data-datenav="-1" aria-label="Previous day">◀</button>
+    <label class="datepick">
+      <span>${isToday ? "Today" : esc(fmtDate(viewDate))}</span>
+      <input type="date" id="date-pick" value="${viewDate}" max="${today}" />
+    </label>
+    <button class="icon-btn" data-datenav="1" ${isToday ? "disabled" : ""} aria-label="Next day">▶</button>
+    ${isToday ? "" : `<button class="btn sm" data-today="1">Today</button>`}
+  </div>`;
+}
+
+function shiftDate(n) {
+  const dt = new Date(viewDate + "T00:00:00");
+  dt.setDate(dt.getDate() + n);
+  const k = Store.todayKey(dt);
+  if (k > Store.todayKey()) return; // no future logging
+  viewDate = k;
+  rerenderView();
+}
+
+function bindDateBar() {
+  $$("[data-datenav]").forEach((b) => b.onclick = () => shiftDate(+b.dataset.datenav));
+  const dp = $("#date-pick");
+  if (dp) dp.onchange = () => { if (dp.value && dp.value <= Store.todayKey()) { viewDate = dp.value; rerenderView(); } };
+  const tb = $("[data-today]");
+  if (tb) tb.onclick = () => { viewDate = Store.todayKey(); rerenderView(); };
+}
 
 // =============================================================================
 // Boot
@@ -101,7 +133,7 @@ function tabbar(route) {
 // XP / award sync + badge toasts
 // =============================================================================
 function syncAwards() {
-  const d = Store.day();
+  const d = Store.day(viewDate);
   d.awarded = d.awarded || {};
   const p = Store.profile;
   const checks = {
@@ -137,13 +169,13 @@ function toastMsg(emoji, title, body) {
 // TODAY view
 // =============================================================================
 function viewToday() {
-  const dow = new Date().getDay();
+  const dow = new Date(viewDate + "T00:00:00").getDay();
   const plan = DAYS[dow];
-  const d = Store.day();
+  const d = Store.day(viewDate);
   const blocks = plan.blocks;
   const doneCount = blocks.filter((b, i) => blockDone(d, b, i)).length;
 
-  let html = "";
+  let html = dateBar();
 
   // install banner
   if (deferredInstall) {
@@ -285,12 +317,12 @@ function stepsAnchorRow(d) {
 // NUTRITION view
 // =============================================================================
 function viewNutrition() {
-  const d = Store.day();
+  const d = Store.day(viewDate);
   const p = Store.profile;
   const glasses = Math.round(p.waterMl / p.glassMl);
   const waterMl = d.water * p.glassMl;
 
-  let html = `<div class="cols2">`;
+  let html = dateBar() + `<div class="cols2">`;
 
   // Hydration
   html += `<div class="card">
@@ -566,10 +598,11 @@ function bindView(route) {
 
 function bindToday() {
   const view = $("#view");
-  const d = Store.day();
+  const d = Store.day(viewDate);
+  bindDateBar();
 
   const cs = $("#complete-session");
-  if (cs) cs.onclick = () => { Store.day().sessionDone = true; Store.addXp(0); commit({ full: true }); };
+  if (cs) cs.onclick = () => { Store.day(viewDate).sessionDone = true; commit({ full: true }); };
 
   // delegated clicks
   view.addEventListener("click", (e) => {
@@ -598,8 +631,9 @@ function bindToday() {
 
 function bindNutrition() {
   const view = $("#view");
-  const d = Store.day();
+  const d = Store.day(viewDate);
   const p = Store.profile;
+  bindDateBar();
 
   view.addEventListener("click", (e) => {
     const g = e.target.closest("[data-water]");
