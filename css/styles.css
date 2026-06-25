@@ -104,7 +104,9 @@ a { color: var(--volt); text-decoration: none; }
 .ex.done::after { content: ""; }
 .ex .ex-head { display: flex; align-items: center; gap: 12px; }
 .ex .emoji { width: 42px; height: 42px; border-radius: 8px; background: #000; border: 1px solid var(--line);
-  display: grid; place-items: center; font-size: 21px; flex: 0 0 auto; filter: saturate(.7); }
+  display: grid; place-items: center; flex: 0 0 auto; color: #d4d4ce; }
+.ex .emoji svg { width: 22px; height: 22px; }
+.ex.done .emoji { color: var(--volt); border-color: var(--volt); }
 .ex .ex-name { font-weight: 700; font-size: 14px; line-height: 1.15; letter-spacing: .02em; text-transform: uppercase; }
 .ex .ex-sets { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 3px; }
 .ex .ex-note { font-size: 12px; color: var(--volt); margin-top: 5px; opacity: .85; }
@@ -171,7 +173,9 @@ a { color: var(--volt); text-decoration: none; }
 .badge-cell { text-align: center; padding: 13px 8px; border-radius: 9px; background: var(--card-2); border: 1px solid var(--line);
   opacity: .35; filter: grayscale(1); }
 .badge-cell.earned { opacity: 1; filter: none; border-color: var(--volt); background: var(--volt-dim); }
-.badge-cell .be { font-size: 28px; }
+.badge-cell .be { display: grid; place-items: center; height: 30px; color: var(--text); }
+.badge-cell .be svg { width: 27px; height: 27px; }
+.badge-cell.earned .be { color: var(--volt); }
 .badge-cell .bn { font-size: 10px; font-weight: 800; margin-top: 5px; text-transform: uppercase; letter-spacing: .04em; }
 .badge-cell .bd { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
@@ -219,7 +223,8 @@ svg.chart { width: 100%; height: auto; display: block; }
 .toast { pointer-events: auto; background: var(--card); border: 1px solid var(--volt); color: var(--text);
   padding: 11px 15px; border-radius: 9px; font-size: 13px; max-width: 92%;
   display: flex; align-items: center; gap: 11px; animation: pop .25s ease; }
-.toast .be { font-size: 22px; }
+.toast .be { display: grid; place-items: center; color: var(--volt); }
+.toast .be svg { width: 21px; height: 21px; }
 @keyframes pop { from { transform: translateY(16px); opacity: 0; } }
 
 /* install banner */
@@ -245,7 +250,8 @@ svg.chart { width: 100%; height: auto; display: block; }
 /* nutrition rules */
 .rule { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); }
 .rule:last-child { border-bottom: none; }
-.rule .ri { font-size: 20px; filter: saturate(.7); }
+.rule .ri { display: grid; place-items: center; width: 24px; height: 24px; color: var(--volt); flex: 0 0 auto; }
+.rule .ri svg { width: 21px; height: 21px; }
 .rule .rt strong { display: block; font-size: 13px; text-transform: uppercase; letter-spacing: .03em; }
 .rule .rt span { font-size: 13px; color: var(--muted); }
 

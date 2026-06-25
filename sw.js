@@ -4,7 +4,7 @@
  * shows up on the next online open; falls back to cache when offline.
  * Bump VERSION whenever you want to force-evict the old cache.
  */
-const VERSION = "2";
+const VERSION = "3";
 const CACHE = `fitplan-v${VERSION}`;
 const ASSETS = [
   "./",

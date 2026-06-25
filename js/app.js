@@ -11,15 +11,53 @@ const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 const pct = (n, d) => d ? clamp(Math.round((n / d) * 100), 0, 100) : 0;
 const fmtDate = (k) => new Date(k + "T00:00:00").toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
 
-// ---- inline SVG line icons (no emoji in the chrome) -------------------------
+// ---- inline flat SVG line icons (no emoji anywhere) -------------------------
 const ICONS = {
+  // chrome
   dumbbell: '<path d="M6.5 6.5v11M3.5 9v6M17.5 6.5v11M20.5 9v6M6.5 12h11"/>',
   nutrition: '<path d="M5 2v7a2 2 0 0 0 4 0V2M7 9v13M16.5 2c-2 1.8-2 6 0 8v12"/>',
   chart: '<path d="M5 21V13M12 21V4M19 21v-6"/>',
   settings: '<path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4"/><circle cx="15" cy="17" r="2.4"/>',
   flame: '<path d="M12 22a6 6 0 0 0 6-6c0-4-3-5.5-3-9 0 0-2.2 1-2.2 4.2C12.8 9 11.5 7.2 11.5 5 9 6.8 6 8.5 6 16a6 6 0 0 0 6 6z" fill="currentColor" stroke="none"/>',
+  // exercise categories
+  legs: '<path d="M8 3v5M16 3v5M7 8h10M9 8l-2 13M15 8l2 13"/>',
+  hinge: '<path d="M4 5v6M4 11c5 4 11 4 16 0M20 5v6"/>',
+  back: '<path d="M12 3v10M7 8l5 5 5-5M6 21l6-5 6 5"/>',
+  push: '<path d="M12 21V11M7 16l5-5 5 5M6 5l6 5 6-5"/>',
+  core: '<rect x="7" y="3" width="10" height="18" rx="5"/><path d="M7 10h10M7 14h10"/>',
+  posture: '<circle cx="12" cy="4" r="1.8"/><path d="M12 6v8M8 9h8M9 21l3-7 3 7"/>',
+  neck: '<circle cx="12" cy="7" r="3"/><path d="M12 10v4M8 14h8"/>',
+  mobility: '<path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v3h-3"/>',
+  stretch: '<path d="M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4"/>',
+  hang: '<path d="M3 5h18M9 5v5a3 3 0 0 0 6 0V5"/>',
+  lungs: '<path d="M12 3v9M9 12c0-2-3-2-4 1s-1 6 0 7 3 1 4-2M15 12c0-2 3-2 4 1s1 6 0 7-3 1-4-2"/>',
+  walk: '<circle cx="13" cy="4" r="1.7"/><path d="M13 7l-1 5-3 7M12 12l3 2 2 4M9 9l3-1"/>',
+  // nutrition
+  meat: '<path d="M14.5 4.5a4.5 4.5 0 0 0-7 5.5l-3 3 1.6 1.6 3-3a4.5 4.5 0 0 0 5.4-7.1z"/>',
+  leaf: '<path d="M5 19C5 11 11 5 19 5c0 8-6 14-14 14zM5 19c3-3 6-5 9-6"/>',
+  grain: '<path d="M12 22V8M12 8c0-3 2-5 2-5s2 2 2 5-2 5-2 5M12 8c0-3-2-5-2-5S8 5 8 8s2 5 2 5"/>',
+  droplet: '<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z"/>',
+  ban: '<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>',
+  scale: '<path d="M5 8h14l-2 11H7zM9 8a3 3 0 0 1 6 0"/>',
+  foot: '<path d="M9 3c2 0 3 3 3 8 0 3-1 5-3 5s-3-2-3-6 1-7 3-7zM6 18h7"/>',
+  // badges / toasts
+  trophy: '<path d="M7 4h10v4a5 5 0 0 1-10 0zM7 6H5M17 6h2M9 19h6M10 15l-1 4h6l-1-4"/>',
+  star: '<path d="M12 3l2.6 5.6 6 .8-4.4 4.2 1.1 6L12 16.9 6.7 19.6l1.1-6L3.4 9.6l6-.8z"/>',
+  check: '<path d="M4 12l5 5L20 6"/>',
+  bell: '<path d="M6 9a6 6 0 0 1 12 0c0 7 2 8 2 8H4s2-1 2-8M10 21h4"/>',
+  download: '<path d="M12 3v12M7 11l5 5 5-5M5 21h14"/>',
+  alert: '<path d="M12 3l9 16H3zM12 9v4M12 17h.01"/>',
 };
-const svg = (name, w = 24) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
+const svg = (name) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.dumbbell}</svg>`;
+
+// exercise category -> icon
+const CAT_ICON = {
+  "Legs": "legs", "Posterior chain": "hinge", "Glutes": "hinge", "Hips": "hinge",
+  "Back / posture": "back", "Back": "back", "Posture": "posture", "Core": "core",
+  "Decompression": "hang", "Neck / posture": "neck", "Push": "push",
+  "Mobility": "mobility", "Stretch": "stretch", "Recovery": "lungs", "Cardio": "walk",
+};
+const catIcon = (cat) => CAT_ICON[cat] || "dumbbell";
 
 let deferredInstall = null;
 let swReg = null;
@@ -72,7 +110,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
   deferredInstall = e;
   render(); // surfaces the install banner
 });
-window.addEventListener("appinstalled", () => { deferredInstall = null; toastMsg("📲", "Installed!", "FitPlan is now on your home screen."); });
+window.addEventListener("appinstalled", () => { deferredInstall = null; toastMsg("download", "Installed!", "FitPlan is now on your home screen."); });
 
 let reloadingForUpdate = false;
 function registerSW() {
@@ -184,15 +222,16 @@ function syncAwards() {
 function commit({ full = false } = {}) {
   syncAwards();
   const newBadges = Store.commit();
-  newBadges.forEach((b, i) => setTimeout(() => toastMsg(b.emoji, b.name, b.desc), i * 700));
+  newBadges.forEach((b, i) => setTimeout(() => toastMsg(b.ic, b.name, b.desc), i * 700));
   if (full) render(); else rerenderView();
 }
 
-function toastMsg(emoji, title, body) {
+function toastMsg(icon, title, body) {
   const host = $("#toast-host");
   const t = document.createElement("div");
   t.className = "toast";
-  t.innerHTML = `<span class="be">${esc(emoji)}</span><div><strong>${esc(title)}</strong><div class="small muted">${esc(body || "")}</div></div>`;
+  const mark = ICONS[icon] ? svg(icon) : esc(icon);
+  t.innerHTML = `<span class="be">${mark}</span><div><strong>${esc(title)}</strong><div class="small muted">${esc(body || "")}</div></div>`;
   host.appendChild(t);
   setTimeout(() => { t.style.opacity = "0"; t.style.transition = "opacity .4s"; setTimeout(() => t.remove(), 400); }, 3200);
 }
@@ -270,7 +309,7 @@ function keyFor(b, i) { return `${b.ex}#${i}`; }
 function warmupRow(b) {
   const ex = EXERCISES[b.ex];
   return `<div class="ex" style="margin-bottom:8px"><div class="ex-head">
-    <div class="emoji">${ex.emoji}</div>
+    <div class="emoji">${svg(catIcon(ex.cat))}</div>
     <div style="flex:1"><div class="ex-name">${esc(ex.name)}</div><div class="ex-sets">${esc(b.sets)}</div></div>
     <button class="btn sm ghost" data-demo="${b.ex}">▶</button>
   </div></div>`;
@@ -281,7 +320,7 @@ function exerciseBlock(d, b, i) {
   const k = keyFor(b, i);
   const done = blockDone(d, b, i);
   let inner = `<div class="ex-head">
-    <div class="emoji">${ex.emoji}</div>
+    <div class="emoji">${svg(catIcon(ex.cat))}</div>
     <div style="flex:1">
       <div class="ex-name">${esc(ex.name)}</div>
       <div class="ex-sets">${esc(b.sets)}</div>
@@ -318,7 +357,7 @@ function anchorRow(d, a) {
   const ex = EXERCISES[a.ex];
   const on = !!d.anchors[a.ex];
   return `<div class="ex" style="margin-bottom:8px"><div class="ex-head">
-    <div class="emoji">${ex.emoji}</div>
+    <div class="emoji">${svg(catIcon(ex.cat))}</div>
     <div style="flex:1">
       <div class="ex-name">${esc(ex.name)}</div>
       <div class="ex-sets">${esc(a.sets)}${a.note ? " · " + esc(a.note) : ""}</div>
@@ -332,7 +371,7 @@ function stepsAnchorRow(d) {
   const p = Store.profile;
   const steps = d.steps || 0;
   return `<div class="ex" style="margin-bottom:0"><div class="ex-head">
-    <div class="emoji">👟</div>
+    <div class="emoji">${svg("walk")}</div>
     <div style="flex:1">
       <div class="ex-name">Steps</div>
       <div class="ex-sets">Target ${p.steps.toLocaleString()}/day · move 2–3 min every 30–45 min</div>
@@ -411,7 +450,7 @@ function viewNutrition() {
   html += `<div class="card">
     <h2>Your plan</h2>
     <div class="note-box" style="margin-bottom:12px"><b>Plate method:</b> ${esc(NUTRITION.plate)}</div>
-    ${NUTRITION.rules.map((r) => `<div class="rule"><span class="ri">${r.icon}</span><div class="rt"><strong>${esc(r.title)}</strong><span>${esc(r.text)}</span></div></div>`).join("")}
+    ${NUTRITION.rules.map((r) => `<div class="rule"><span class="ri">${svg(r.ic)}</span><div class="rt"><strong>${esc(r.title)}</strong><span>${esc(r.text)}</span></div></div>`).join("")}
     <div class="section-title" style="margin-left:0">Sample day</div>
     ${NUTRITION.sampleDay.map((m) => `<div class="rule"><span class="ri">•</span><div class="rt"><strong>${esc(m.meal)}</strong><span>${esc(m.text)}</span></div></div>`).join("")}
   </div>`;
@@ -446,8 +485,8 @@ function viewProgress() {
     <h2>Your progress</h2>
     <div class="stat-grid">
       <div class="stat"><div class="n">${s.sessions}</div><div class="l">Workouts</div></div>
-      <div class="stat"><div class="n">🔥 ${s.streak}</div><div class="l">Day streak</div></div>
-      <div class="stat"><div class="n">⭐ ${s.level}</div><div class="l">Level</div></div>
+      <div class="stat"><div class="n">${s.streak}</div><div class="l">Day streak</div></div>
+      <div class="stat"><div class="n">${s.level}</div><div class="l">Level</div></div>
       <div class="stat"><div class="n">${s.anchorDays}</div><div class="l">Posture days</div></div>
       <div class="stat"><div class="n">${s.waterDays}</div><div class="l">Hydration days</div></div>
       <div class="stat"><div class="n">${s.proteinDays}</div><div class="l">Protein days</div></div>
@@ -471,7 +510,7 @@ function viewProgress() {
   const earned = new Set(Store.state.badges);
   html += `<div class="card"><h2>Achievements <span class="muted small">(${earned.size}/${BADGES.length})</span></h2>
     <div class="badge-grid">${BADGES.map((b) =>
-      `<div class="badge-cell ${earned.has(b.id) ? "earned" : ""}"><div class="be">${b.emoji}</div><div class="bn">${esc(b.name)}</div><div class="bd">${esc(b.desc)}</div></div>`).join("")}</div>
+      `<div class="badge-cell ${earned.has(b.id) ? "earned" : ""}"><div class="be">${svg(b.ic)}</div><div class="bn">${esc(b.name)}</div><div class="bd">${esc(b.desc)}</div></div>`).join("")}</div>
   </div>`;
 
   return html;
@@ -520,7 +559,7 @@ function weekBars() {
       <div class="bar water" style="margin-top:3px"><i style="width:${water}%"></i></div>
     </div>`);
   }
-  return rows.join("") + `<p class="small muted">🟡 protein vs target · 🔵 water vs target</p>`;
+  return rows.join("") + `<p class="small muted"><span style="color:var(--protein)">▬</span> protein vs target · <span style="color:var(--water)">▬</span> water vs target</p>`;
 }
 
 // simple responsive SVG line chart
@@ -602,7 +641,7 @@ function viewSettings() {
     <h2>About</h2>
     <p class="small muted">FitPlan v1 — built from your Daily Full-Body Programme + Nutrition Plan (v2, DIERS-tailored). Posture-aware loading for kyphosis, forward head and a mild lateral curve. Not medical advice — see the safety notes below.</p>
     <hr class="sep">
-    <p class="small muted">⚠️ Stop and see a doctor for radiating/nerve pain, numbness, tingling, or new/worsening pain. Confirm the side-plank bias and the 66° kyphosis read with a physio.</p>
+    <p class="small muted"><strong style="color:var(--warn)">Caution —</strong> stop and see a doctor for radiating/nerve pain, numbness, tingling, or new/worsening pain. Confirm the side-plank bias and the 66° kyphosis read with a physio.</p>
   </div>`;
 }
 
@@ -698,7 +737,7 @@ function bindSettings() {
       glassMl: +$("#p-glass").value || Store.profile.glassMl,
       steps: +$("#p-steps").value || Store.profile.steps,
     });
-    toastMsg("✅", "Saved", "Targets updated.");
+    toastMsg("check", "Saved", "Targets updated.");
     render();
   };
 
@@ -706,7 +745,7 @@ function bindSettings() {
   if (en) en.onclick = async () => {
     if (!("Notification" in window)) return;
     const perm = await Notification.requestPermission();
-    if (perm === "granted") { Store.setReminders({ enabled: true }); scheduleReminders(); toastMsg("🔔", "Notifications on", "You'll get your reminders."); }
+    if (perm === "granted") { Store.setReminders({ enabled: true }); scheduleReminders(); toastMsg("bell", "Notifications on", "You'll get your reminders."); }
     render();
   };
 
@@ -718,7 +757,7 @@ function bindSettings() {
       protein: $("#r-protein").value, water: $("#r-water").checked,
     });
     scheduleReminders();
-    toastMsg("🔔", "Reminders saved", "Scheduled for today.");
+    toastMsg("bell", "Reminders saved", "Scheduled for today.");
   };
 
   const tn = $("#test-notif");
@@ -733,7 +772,7 @@ function bindSettings() {
   $("#import-data").onclick = () => {
     const inp = document.createElement("input"); inp.type = "file"; inp.accept = "application/json";
     inp.onchange = () => { const f = inp.files[0]; if (!f) return; const fr = new FileReader();
-      fr.onload = () => { try { Store.import(fr.result); toastMsg("✅", "Imported", "Backup restored."); render(); } catch { toastMsg("⚠️", "Failed", "Invalid backup file."); } };
+      fr.onload = () => { try { Store.import(fr.result); toastMsg("check", "Imported", "Backup restored."); render(); } catch { toastMsg("alert", "Failed", "Invalid backup file."); } };
       fr.readAsText(f); };
     inp.click();
   };
@@ -775,7 +814,7 @@ const reminderTimers = [];
 function clearTimers() { reminderTimers.forEach(clearTimeout); reminderTimers.length = 0; }
 
 function notify(title, body, tag) {
-  if (!("Notification" in window) || Notification.permission !== "granted") { toastMsg("🔔", title, body); return; }
+  if (!("Notification" in window) || Notification.permission !== "granted") { toastMsg("bell", title, body); return; }
   if (swReg && swReg.active) swReg.active.postMessage({ type: "notify", title, body, tag, url: "index.html#/today" });
   else new Notification(title, { body, icon: "icons/icon-192.png", tag });
 }
