@@ -66,4 +66,4 @@ This app is a training aid, **not medical advice**. Per your plan:
 
 ## Credits
 
-UI icons from [Tabler Icons](https://tabler.io/icons) (MIT License).
+UI icons from [game-icons.net](https://game-icons.net) by Delapouite, Lorc, Carl Olsen & Skoll, licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
