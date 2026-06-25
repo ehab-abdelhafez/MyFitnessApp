@@ -213,13 +213,13 @@ const WEEKDAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "
 // ---- Nutrition ---------------------------------------------------------------
 const NUTRITION = {
   rules: [
-    { icon: "🥩", title: "Protein 150–170 g/day", text: "Protects muscle while you lose fat. Spread across meals (~35–45 g each). 140 g is fine on low-appetite days. A shake is the easy way to top up." },
-    { icon: "🥗", title: "Half your plate vegetables", text: "At lunch and dinner." },
-    { icon: "🍚", title: "Smart carbs, sized to training", text: "Oats, rice, potatoes, legumes, fruit. More on strength days, less on rest days." },
-    { icon: "🥑", title: "Healthy fats in moderation", text: "Olive oil, nuts, avocado, oily fish twice a week." },
-    { icon: "💧", title: "Hydrate 2.5–3 L/day", text: "Also blunts nausea & constipation common on GLP-class drugs." },
-    { icon: "🚫", title: "Minimise the junk", text: "Ultra-processed food, added sugar, and liquid calories." },
-    { icon: "📉", title: "Lose 0.5–0.75 kg/week", text: "Slow loss with high protein + training keeps it as fat, not muscle. The plate method, protein target and steps do the work." },
+    { ic: "meat", title: "Protein 150–170 g/day", text: "Protects muscle while you lose fat. Spread across meals (~35–45 g each). 140 g is fine on low-appetite days. A shake is the easy way to top up." },
+    { ic: "leaf", title: "Half your plate vegetables", text: "At lunch and dinner." },
+    { ic: "grain", title: "Smart carbs, sized to training", text: "Oats, rice, potatoes, legumes, fruit. More on strength days, less on rest days." },
+    { ic: "droplet", title: "Healthy fats in moderation", text: "Olive oil, nuts, avocado, oily fish twice a week." },
+    { ic: "droplet", title: "Hydrate 2.5–3 L/day", text: "Also blunts nausea & constipation common on GLP-class drugs." },
+    { ic: "ban", title: "Minimise the junk", text: "Ultra-processed food, added sugar, and liquid calories." },
+    { ic: "scale", title: "Lose 0.5–0.75 kg/week", text: "Slow loss with high protein + training keeps it as fat, not muscle. The plate method, protein target and steps do the work." },
   ],
   plate: "Half the plate vegetables · a quarter protein · a quarter smart carbs · plus a thumb of healthy fat.",
   sampleDay: [
@@ -241,18 +241,18 @@ const NUTRITION = {
 // ---- Achievements / badges ---------------------------------------------------
 // type-driven; evaluated in store.js
 const BADGES = [
-  { id: "first_session", emoji: "🎉", name: "First Rep", desc: "Complete your first session" },
-  { id: "streak3", emoji: "🔥", name: "On a Roll", desc: "3-day activity streak" },
-  { id: "streak7", emoji: "⚡", name: "Full Week", desc: "7-day activity streak" },
-  { id: "streak30", emoji: "🏆", name: "Unstoppable", desc: "30-day activity streak" },
-  { id: "sessions10", emoji: "💪", name: "Committed", desc: "10 workouts logged" },
-  { id: "sessions25", emoji: "🦾", name: "Iron Habit", desc: "25 workouts logged" },
-  { id: "hydration7", emoji: "🌊", name: "Well Watered", desc: "Hit your water target 7 days" },
-  { id: "protein7", emoji: "🥩", name: "Protein Pro", desc: "Hit your protein target 7 days" },
-  { id: "steps10", emoji: "👟", name: "Step Master", desc: "10k+ steps in a day" },
-  { id: "posture50", emoji: "🧍", name: "Tall & Proud", desc: "50 posture-anchor days" },
-  { id: "level5", emoji: "⭐", name: "Rising Star", desc: "Reach level 5" },
-  { id: "weightlog", emoji: "⚖️", name: "Tracking Trends", desc: "Log your weight 5 times" },
+  { id: "first_session", ic: "check", name: "First Rep", desc: "Complete your first session" },
+  { id: "streak3", ic: "flame", name: "On a Roll", desc: "3-day activity streak" },
+  { id: "streak7", ic: "flame", name: "Full Week", desc: "7-day activity streak" },
+  { id: "streak30", ic: "trophy", name: "Unstoppable", desc: "30-day activity streak" },
+  { id: "sessions10", ic: "dumbbell", name: "Committed", desc: "10 workouts logged" },
+  { id: "sessions25", ic: "trophy", name: "Iron Habit", desc: "25 workouts logged" },
+  { id: "hydration7", ic: "droplet", name: "Well Watered", desc: "Hit your water target 7 days" },
+  { id: "protein7", ic: "meat", name: "Protein Pro", desc: "Hit your protein target 7 days" },
+  { id: "steps10", ic: "foot", name: "Step Master", desc: "10k+ steps in a day" },
+  { id: "posture50", ic: "posture", name: "Tall & Proud", desc: "50 posture-anchor days" },
+  { id: "level5", ic: "star", name: "Rising Star", desc: "Reach level 5" },
+  { id: "weightlog", ic: "scale", name: "Tracking Trends", desc: "Log your weight 5 times" },
 ];
 
 // XP awards
