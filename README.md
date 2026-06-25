@@ -63,3 +63,7 @@ This app is a training aid, **not medical advice**. Per your plan:
 - Confirm the **66° kyphosis** read and the **left-side-plank bias** with a physio (ideally Schroth-trained).
 - Avoid heavy end-range spinal rounding under load and ballistic twisting.
 - **Stop and see a doctor** for any radiating/nerve pain, numbness, tingling, or new/worsening pain.
+
+## Credits
+
+UI icons from [Tabler Icons](https://tabler.io/icons) (MIT License).
