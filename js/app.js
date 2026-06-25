@@ -74,10 +74,32 @@ window.addEventListener("beforeinstallprompt", (e) => {
 });
 window.addEventListener("appinstalled", () => { deferredInstall = null; toastMsg("📲", "Installed!", "FitPlan is now on your home screen."); });
 
+let reloadingForUpdate = false;
 function registerSW() {
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js").then((r) => { swReg = r; }).catch(() => {});
-  }
+  if (!("serviceWorker" in navigator)) return;
+  // If the app was already controlled, a controller change means an UPDATE
+  // activated — reload once to pick up the new assets. (Skips the very first
+  // install, where there's no prior controller, to avoid a needless reload.)
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!hadController || reloadingForUpdate) return;
+    reloadingForUpdate = true;
+    window.location.reload();
+  });
+  navigator.serviceWorker.register("sw.js").then((r) => {
+    swReg = r;
+    r.update().catch(() => {});
+    // when a new SW is found and finishes installing, activate it immediately
+    r.addEventListener("updatefound", () => {
+      const sw = r.installing;
+      if (!sw) return;
+      sw.addEventListener("statechange", () => {
+        if (sw.state === "installed" && navigator.serviceWorker.controller) {
+          sw.postMessage({ type: "skip-waiting" });
+        }
+      });
+    });
+  }).catch(() => {});
 }
 
 // =============================================================================
@@ -806,4 +828,8 @@ async function doInstall() {
 }
 
 // re-arm reminders when the app regains focus (covers next-day use)
-document.addEventListener("visibilitychange", () => { if (!document.hidden) scheduleReminders(); });
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) return;
+  scheduleReminders();
+  if (swReg) swReg.update().catch(() => {}); // check for a new version on reopen
+});
