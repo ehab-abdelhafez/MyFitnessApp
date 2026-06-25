@@ -11,6 +11,16 @@ const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 const pct = (n, d) => d ? clamp(Math.round((n / d) * 100), 0, 100) : 0;
 const fmtDate = (k) => new Date(k + "T00:00:00").toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
 
+// ---- inline SVG line icons (no emoji in the chrome) -------------------------
+const ICONS = {
+  dumbbell: '<path d="M6.5 6.5v11M3.5 9v6M17.5 6.5v11M20.5 9v6M6.5 12h11"/>',
+  nutrition: '<path d="M5 2v7a2 2 0 0 0 4 0V2M7 9v13M16.5 2c-2 1.8-2 6 0 8v12"/>',
+  chart: '<path d="M5 21V13M12 21V4M19 21v-6"/>',
+  settings: '<path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.4"/><circle cx="15" cy="17" r="2.4"/>',
+  flame: '<path d="M12 22a6 6 0 0 0 6-6c0-4-3-5.5-3-9 0 0-2.2 1-2.2 4.2C12.8 9 11.5 7.2 11.5 5 9 6.8 6 8.5 6 16a6 6 0 0 0 6 6z" fill="currentColor" stroke="none"/>',
+};
+const svg = (name, w = 24) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
+
 let deferredInstall = null;
 let swReg = null;
 let viewDate = Store.todayKey(); // the day being viewed/logged (defaults to today)
@@ -97,10 +107,10 @@ function rerenderView() {
 function topbar() {
   const greet = greeting();
   return `<div class="topbar">
-    <div class="logo">🏋️</div>
+    <div class="logo">${svg("dumbbell")}</div>
     <div><h1>FitPlan</h1><div class="sub">${esc(greet)}</div></div>
     <div class="spacer"></div>
-    <button class="icon-btn" data-go="#/settings" aria-label="Settings">⚙️</button>
+    <button class="icon-btn" data-go="#/settings" aria-label="Settings">${svg("settings")}</button>
   </div>`;
 }
 
@@ -114,19 +124,19 @@ function greeting() {
 function levelbar(s) {
   const fill = pct(s.into, s.need);
   return `<div id="levelbar-host"><div class="levelbar">
-    <span class="lv">⭐ Lv ${s.level}</span>
+    <span class="lv">LV ${s.level}</span>
     <div class="track"><div class="fill" style="width:${fill}%"></div></div>
-    <span class="streak">🔥 ${s.streak}d</span>
+    <span class="streak">${svg("flame")} ${s.streak}</span>
   </div></div>`;
 }
 
 function tabbar(route) {
   const items = [
-    ["#/today", "🏠", "Today"], ["#/nutrition", "🥗", "Nutrition"],
-    ["#/progress", "📈", "Progress"], ["#/settings", "⚙️", "Settings"],
+    ["#/today", "dumbbell", "Train"], ["#/nutrition", "nutrition", "Fuel"],
+    ["#/progress", "chart", "Progress"], ["#/settings", "settings", "Settings"],
   ];
   return `<nav class="tabbar">${items.map(([h, i, l]) =>
-    `<a href="${h}" class="${route === h ? "active" : ""}"><span class="ic">${i}</span>${l}</a>`).join("")}</nav>`;
+    `<a href="${h}" class="${route === h ? "active" : ""}"><span class="ic">${svg(i)}</span>${l}</a>`).join("")}</nav>`;
 }
 
 // =============================================================================
@@ -180,12 +190,12 @@ function viewToday() {
   // install banner
   if (deferredInstall) {
     html += `<div class="card install-banner">
-      <h2>📲 Install FitPlan</h2>
+      <h2>Install FitPlan</h2>
       <p class="small">Add it to your home screen — full-screen, offline, just like a native app.</p>
-      <button class="btn block" id="install-btn" style="background:#fff;color:#3b2f86">Install now</button>
+      <button class="btn block" id="install-btn">Install now</button>
     </div>`;
   } else if (!isStandalone()) {
-    html += `<div class="note-box" style="margin-bottom:14px">📲 To install: tap your browser menu → <b>Add to Home screen</b>.</div>`;
+    html += `<div class="note-box" style="margin-bottom:14px">To install: tap your browser menu → <b>Add to Home screen</b>.</div>`;
   }
 
   // hero / today's session
@@ -224,7 +234,7 @@ function viewToday() {
   return html;
 }
 
-function typeLabel(t) { return { strength: "💪 Strength", mobility: "🧘 Mobility", conditioning: "🔥 Conditioning" }[t] || t; }
+function typeLabel(t) { return { strength: "Strength", mobility: "Mobility", conditioning: "Conditioning" }[t] || t; }
 
 function blockDone(d, b, i) {
   if (b.log) {
@@ -326,7 +336,7 @@ function viewNutrition() {
 
   // Hydration
   html += `<div class="card">
-    <h2>💧 Hydration</h2>
+    <h2>Hydration</h2>
     <div class="row between"><div><span class="big" style="font-size:26px;font-weight:800">${(waterMl / 1000).toFixed(2)} L</span>
       <span class="target"> / ${(p.waterMl / 1000).toFixed(2)} L</span></div>
       <span class="pill">${d.water} × ${p.glassMl}ml</span></div>
@@ -342,7 +352,7 @@ function viewNutrition() {
 
   // Protein
   html += `<div class="card">
-    <h2>🥩 Protein</h2>
+    <h2>Protein</h2>
     <div class="row between"><div><span class="big" style="font-size:26px;font-weight:800">${d.protein} g</span>
       <span class="target"> / ${p.protein} g</span></div>
       <span class="pill ${d.protein >= p.protein ? "good" : ""}">${pct(d.protein, p.protein)}%</span></div>
@@ -362,7 +372,7 @@ function viewNutrition() {
   // Weight
   const lastW = lastWeight();
   html += `<div class="card">
-    <h2>⚖️ Body weight</h2>
+    <h2>Body weight</h2>
     <div class="row between">
       <div><span class="big" style="font-size:26px;font-weight:800">${d.weight != null ? d.weight + " kg" : "—"}</span>
         ${lastW && d.weight == null ? `<span class="target"> last: ${lastW.w} kg (${fmtDate(lastW.k)})</span>` : ""}</div>
@@ -377,7 +387,7 @@ function viewNutrition() {
 
   // Plan reference
   html += `<div class="card">
-    <h2>🍽️ Your plan</h2>
+    <h2>Your plan</h2>
     <div class="note-box" style="margin-bottom:12px"><b>Plate method:</b> ${esc(NUTRITION.plate)}</div>
     ${NUTRITION.rules.map((r) => `<div class="rule"><span class="ri">${r.icon}</span><div class="rt"><strong>${esc(r.title)}</strong><span>${esc(r.text)}</span></div></div>`).join("")}
     <div class="section-title" style="margin-left:0">Sample day</div>
@@ -411,7 +421,7 @@ function viewProgress() {
   let html = "";
 
   html += `<div class="card">
-    <h2>📈 Your progress</h2>
+    <h2>Your progress</h2>
     <div class="stat-grid">
       <div class="stat"><div class="n">${s.sessions}</div><div class="l">Workouts</div></div>
       <div class="stat"><div class="n">🔥 ${s.streak}</div><div class="l">Day streak</div></div>
@@ -424,20 +434,20 @@ function viewProgress() {
 
   // weight trend
   const ws = weightSeries();
-  html += `<div class="card"><h2>⚖️ Weight trend</h2>${
+  html += `<div class="card"><h2>Weight trend</h2>${
     ws.length >= 2
       ? lineChart(ws.map(x => x.w), ws.map(x => x.k)) + `<p class="small muted">${ws.length} entries · ${ws[0].w} → ${ws[ws.length - 1].w} kg · goal ${Store.profile.goalWeight} kg</p>`
       : `<p class="small muted">Log weight in the Nutrition tab to chart your trend.</p>`}</div>`;
 
   // 7-day protein & water bars
-  html += `<div class="card"><h2>🥗 Last 7 days</h2>${weekBars()}</div>`;
+  html += `<div class="card"><h2>Last 7 days</h2>${weekBars()}</div>`;
 
   // activity heatmap
-  html += `<div class="card"><h2>🗓️ Consistency</h2>${heatmap()}<p class="small muted">Last 12 weeks — brighter = more done that day.</p></div>`;
+  html += `<div class="card"><h2>Consistency</h2>${heatmap()}<p class="small muted">Last 12 weeks — brighter = more done that day.</p></div>`;
 
   // badges
   const earned = new Set(Store.state.badges);
-  html += `<div class="card"><h2>🏅 Achievements <span class="muted small">(${earned.size}/${BADGES.length})</span></h2>
+  html += `<div class="card"><h2>Achievements <span class="muted small">(${earned.size}/${BADGES.length})</span></h2>
     <div class="badge-grid">${BADGES.map((b) =>
       `<div class="badge-cell ${earned.has(b.id) ? "earned" : ""}"><div class="be">${b.emoji}</div><div class="bn">${esc(b.name)}</div><div class="bd">${esc(b.desc)}</div></div>`).join("")}</div>
   </div>`;
@@ -523,7 +533,7 @@ function viewSettings() {
 
   return `
   <div class="card">
-    <h2>👤 Profile & targets</h2>
+    <h2>Profile &amp; targets</h2>
     <div class="field"><label>Name</label><input id="p-name" value="${esc(p.name)}" placeholder="Your name" /></div>
     <div class="grid2">
       <div class="field"><label>Height (cm)</label><input id="p-height" type="number" value="${p.height}" /></div>
@@ -537,7 +547,7 @@ function viewSettings() {
   </div>
 
   <div class="card">
-    <h2>🔔 Reminders</h2>
+    <h2>Reminders</h2>
     <p class="small muted" style="margin-top:0">Local notifications. They fire while FitPlan is open or recently used — keep it added to your home screen for best results.</p>
     ${notifState === "granted"
       ? `<span class="pill good">✓ Notifications enabled</span>`
@@ -546,11 +556,11 @@ function viewSettings() {
         : `<button class="btn primary block" id="enable-notif">Enable notifications</button>`}
     <div style="margin-top:14px">
       <label class="row between" style="padding:8px 0"><span>Workout reminder</span>
-        <input type="time" id="r-workout" value="${r.workout}" style="width:auto;background:#0e1233;border:1px solid var(--line);color:#fff;border-radius:8px;padding:6px"/></label>
+        <input type="time" id="r-workout" value="${r.workout}" style="width:auto;background:#000;border:1px solid var(--line);color:var(--text);border-radius:6px;padding:6px;font-family:var(--mono)"/></label>
       <label class="row between" style="padding:8px 0"><span>Posture anchors reminder</span>
-        <input type="time" id="r-anchors" value="${r.anchors}" style="width:auto;background:#0e1233;border:1px solid var(--line);color:#fff;border-radius:8px;padding:6px"/></label>
+        <input type="time" id="r-anchors" value="${r.anchors}" style="width:auto;background:#000;border:1px solid var(--line);color:var(--text);border-radius:6px;padding:6px;font-family:var(--mono)"/></label>
       <label class="row between" style="padding:8px 0"><span>Protein check-in</span>
-        <input type="time" id="r-protein" value="${r.protein}" style="width:auto;background:#0e1233;border:1px solid var(--line);color:#fff;border-radius:8px;padding:6px"/></label>
+        <input type="time" id="r-protein" value="${r.protein}" style="width:auto;background:#000;border:1px solid var(--line);color:var(--text);border-radius:6px;padding:6px;font-family:var(--mono)"/></label>
       <label class="row between" style="padding:8px 0"><span>Water nudges (while open)</span>
         <input type="checkbox" id="r-water" ${r.water ? "checked" : ""} style="width:22px;height:22px"/></label>
     </div>
@@ -559,7 +569,7 @@ function viewSettings() {
   </div>
 
   <div class="card">
-    <h2>💾 Your data</h2>
+    <h2>Your data</h2>
     <p class="small muted" style="margin-top:0">Everything is stored privately on this device. Back it up before clearing browser data.</p>
     <div class="ex-actions"><button class="btn sm" id="export-data">Export backup</button>
       <button class="btn sm ghost" id="import-data">Import</button></div>
@@ -567,7 +577,7 @@ function viewSettings() {
   </div>
 
   <div class="card">
-    <h2>ℹ️ About</h2>
+    <h2>About</h2>
     <p class="small muted">FitPlan v1 — built from your Daily Full-Body Programme + Nutrition Plan (v2, DIERS-tailored). Posture-aware loading for kyphosis, forward head and a mild lateral curve. Not medical advice — see the safety notes below.</p>
     <hr class="sep">
     <p class="small muted">⚠️ Stop and see a doctor for radiating/nerve pain, numbness, tingling, or new/worsening pain. Confirm the side-plank bias and the 66° kyphosis read with a physio.</p>
